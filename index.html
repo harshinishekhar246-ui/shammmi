@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farewell - Memories Forever</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:#0f0a1a;color:white;text-align:center}
+.hero{padding:50px 20px 30px;background:linear-gradient(180deg,#2a1150,#0f0a1a)}
+.hero img{width:min(92vw,520px);border-radius:20px;border:4px solid #ffcc70}
+.hero h1{font-size:42px;margin:22px 0 8px;color:#ffcc70}
+.hero p{font-size:18px;opacity:.9;line-height:1.6}
+.badge{display:inline-block;background:#ffcc70;color:#1a0f2e;padding:8px 18px;border-radius:50px;font-weight:700;margin-top:14px}
+.section{padding:40px 20px;max-width:900px;margin:auto}
+.section h2{font-size:28px;color:#ffcc70;margin-bottom:12px}
+.section p{font-size:17px;line-height:1.7;opacity:.92}
+.card{background:#1e1433;border:1px solid #3a2a65;border-radius:18px;padding:24px;margin:16px 0;text-align:left}
+.card h3{color:#ffcc70;margin-bottom:8px}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}
+.gallery img{width:100%;height:220px;object-fit:cover;border-radius:14px;border:2px solid #3a2a65}
+.quote{font-style:italic;font-size:19px;line-height:1.6;background:#241a45;padding:24px;border-radius:18px;margin:20px 0}
+.btn{display:inline-block;background:#ffcc70;color:#1a0f2e;padding:13px 28px;border-radius:50px;font-weight:800;text-decoration:none;margin-top:18px;border:none;cursor:pointer;font-size:16px}
+.footer{padding:30px;opacity:.7;font-size:14px}
+input,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #3a2a65;background:#120b25;color:white;margin:8px 0;font-size:16px;outline:none}
+input:focus,textarea:focus{border-color:#ffcc70}
+.feed{background:#fff;color:#1a0f2e;border-radius:14px;padding:14px;margin:12px 0;text-align:left}
+.feed b{color:#6a2fb5}
+.feed small{opacity:.6}
+@media(max-width:600px){.hero h1{font-size:32px}.gallery img{height:170px}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<img src="farewell.jpg" alt="Farewell">
+<h1>It's Not Goodbye,<br>It's See You Later 💜</h1>
+<p>Some moments never fade.<br>Some people never leave our heart.</p>
+<div class="badge">✨ Memories Forever ✨</div>
+</div>
+
+<div class="section">
+<h2>Dear Friends 💌</h2>
+<p>We laughed, we cried, we grew together.<br>Every memory we made will stay with me forever.</p>
+<div class="quote">"Goodbyes are not the end.<br>They are just a new beginning with old memories."</div>
+<div class="card"><h3>🤍 Thank You</h3><p>For all the late-night talks, endless laughter, silly fights, and unforgettable moments. You made this chapter beautiful.</p></div>
+<div class="card"><h3>🌸 Always Remember</h3><p>No matter where life takes us, we will always find our way back to these memories.</p></div>
+<div class="card"><h3>✨ Wishing You</h3><p>Success, happiness, love and all the beautiful things life has to offer. Keep shining!</p></div>
+</div>
+
+<div class="section">
+<h2>📸 Our Memories Gallery</h2>
+<p>Every photo tells a story we will never forget.</p>
+<div class="gallery">
+<img src="memory1.jpg"><img src="memory2.jpg">
+<img src="memory3.jpg"><img src="memory4.jpg">
+<img src="memory5.jpg"><img src="memory6.jpg">
+<img src="memory7.jpg"><img src="memory8.jpg">
+</div>
+</div>
+
+<div class="section">
+<h2>💬 Give Your Feedback</h2>
+<p>Write something sweet for her - it will show below and also go directly to her WhatsApp.</p>
+<input id="fname" placeholder="Your Name ✨" />
+<textarea id="fmsg" rows="3" placeholder="Write your message / memory... 💜"></textarea>
+<button class="btn" onclick="sendFeedback()">Send Feedback 💌</button>
+<p style="font-size:13px;margin-top:10px;opacity:.6">Your message will be sent privately. Number is not shown here.</p>
+
+<div id="feedList" style="margin-top:20px"></div>
+</div>
+
+<div class="section">
+<h2>💜 Forever In My Heart</h2>
+<p>This is not the end of us.<br>It's just a beautiful new start.</p>
+</div>
+<div class="footer">Made with Love • Memories Never Fade • 2026</div>
+
+<script>
+// Number is hidden - split into parts, not shown on page
+const _a = "9172";
+const _b = "04271";
+const _c = "636";
+const _num = _a + _b + _c;
+
+let feeds = JSON.parse(localStorage.getItem("farewellFeeds") || "[]");
+function renderFeeds(){
+  let box = document.getElementById("feedList");
+  if(feeds.length===0){ box.innerHTML="<p style='opacity:.6'>No feedback yet. Be the first to write! 💜</p>"; return; }
+  box.innerHTML = feeds.slice().reverse().map(f=>`<div class="feed"><b>${f.name} 💜</b><br>${f.msg}<br><small>${f.time}</small></div>`).join("");
+}
+renderFeeds();
+
+function sendFeedback(){
+  let name = document.getElementById("fname").value.trim();
+  let msg = document.getElementById("fmsg").value.trim();
+  if(!name || !msg){ alert("Please write your name and message!"); return; }
+  let time = new Date().toLocaleString();
+  feeds.push({name:name, msg:msg, time:time});
+  localStorage.setItem("farewellFeeds", JSON.stringify(feeds));
+  renderFeeds();
+  // Send to WhatsApp - opens WhatsApp with message ready
+  let text = encodeURIComponent("Hi! New Farewell Feedback 💜\n\nFrom: " + name + "\nMessage: " + msg);
+  window.open("https://wa.me/" + _num + "?text=" + text, "_blank");
+  document.getElementById("fname").value="";
+  document.getElementById("fmsg").value="";
+  alert("Thank you! Your feedback is posted below and sent to her 💌");
+}
+</script>
+</body>
+</html>
