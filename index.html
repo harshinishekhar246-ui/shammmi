@@ -8,7 +8,7 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 body{background:#0f0a1a;color:white;text-align:center}
 .hero{padding:50px 20px 30px;background:linear-gradient(180deg,#4a1050,#0f0a1a)}
-.hero img{width:min(92vw,520px);border-radius:20px;border:4px solid #ff8fab;box-shadow:0 15px 40px rgba(0,0,0,.5)}
+.hero img{width:min(92vw,520px);border-radius:20px;border:4px solid #ff8fab;box-shadow:0 15px 40px rgba(0,0,0,.5);cursor:zoom-in}
 .hero h1{font-size:48px;margin:22px 0 8px;color:#ff8fab;line-height:1.1;text-shadow:0 0 20px rgba(255,143,171,.5)}
 .hero h2{font-size:24px;color:#fff;margin:8px 0;font-weight:400}
 .hero p{font-size:18px;opacity:.9;line-height:1.6}
@@ -19,7 +19,7 @@ body{background:#0f0a1a;color:white;text-align:center}
 .card{background:#1e1433;border:1px solid #3a2a65;border-radius:18px;padding:24px;margin:16px 0;text-align:left}
 .card h3{color:#ff8fab;margin-bottom:8px}
 .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}
-.gallery img{width:100%;height:220px;object-fit:cover;border-radius:14px;border:2px solid #3a2a65}
+.gallery img{width:100%;height:auto;max-height:320px;object-fit:contain;background:#120b25;border-radius:14px;border:2px solid #3a2a65;cursor:zoom-in}
 .quote{font-style:italic;font-size:19px;line-height:1.6;background:#241a45;padding:24px;border-radius:18px;margin:20px 0}
 .btn{display:inline-block;background:#ff8fab;color:#1a0f2e;padding:13px 28px;border-radius:50px;font-weight:800;text-decoration:none;margin-top:18px;border:none;cursor:pointer;font-size:16px}
 .footer{padding:30px;opacity:.7;font-size:14px}
@@ -27,13 +27,19 @@ input,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #3a2a
 .feed{background:#fff;color:#1a0f2e;border-radius:14px;padding:14px;margin:12px 0;text-align:left}
 .feed b{color:#b5179e}
 .feed small{opacity:.6}
-@media(max-width:600px){.hero h1{font-size:38px}}
+/* FULL SCREEN VIEWER */
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;z-index:9999;padding:10px}
+#lightbox.open{display:flex}
+#lightbox img{max-width:100%;max-height:92vh;width:auto;height:auto;object-fit:contain;border-radius:12px;border:3px solid #ff8fab}
+#lightboxClose{position:absolute;top:14px;right:18px;background:#ff8fab;color:#1a0f2e;border:none;width:44px;height:44px;border-radius:50%;font-size:22px;font-weight:800;cursor:pointer}
+#lightboxHint{position:absolute;bottom:16px;left:0;right:0;color:white;opacity:.7;font-size:14px}
+@media(max-width:600px){.hero h1{font-size:38px}.gallery{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 
 <div class="hero">
-<img src="farewell.jpg" alt="Shammmi">
+<img src="farewell.jpg" alt="Shammmi" onclick="openFull(this.src)">
 <h1>MISS YOU<br>SHAMMMII 💜</h1>
 <h2>It's Not Goodbye, It's See You Later</h2>
 <p>Shammmi, you are not just a friend.<br>You are a feeling, a memory, a forever person.</p>
@@ -51,12 +57,12 @@ input,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #3a2a
 
 <div class="section">
 <h2>📸 Our Memories With Shammmi</h2>
-<p>Every photo is a piece of our story.</p>
+<p>Tap any photo to see in full screen 👆</p>
 <div class="gallery">
-<img src="memory1.jpg"><img src="memory2.jpg">
-<img src="memory3.jpg"><img src="memory4.jpg">
-<img src="memory5.jpg"><img src="memory6.jpg">
-<img src="memory7.jpg"><img src="memory8.jpg">
+<img src="memory1.jpg" onclick="openFull(this.src)"><img src="memory2.jpg" onclick="openFull(this.src)">
+<img src="memory3.jpg" onclick="openFull(this.src)"><img src="memory4.jpg" onclick="openFull(this.src)">
+<img src="memory5.jpg" onclick="openFull(this.src)"><img src="memory6.jpg" onclick="openFull(this.src)">
+<img src="memory7.jpg" onclick="openFull(this.src)"><img src="memory8.jpg" onclick="openFull(this.src)">
 </div>
 </div>
 
@@ -75,6 +81,13 @@ input,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #3a2a
 <p>Miss You Shammmi... Always 💜<br>This is not the end. It's just a beautiful new start.</p>
 </div>
 <div class="footer">Made with Love for Shammmi • Miss You Shammmi • 2026</div>
+
+<!-- FULL SCREEN POPUP -->
+<div id="lightbox" onclick="closeFull()">
+<button id="lightboxClose" onclick="closeFull()">✕</button>
+<img id="lightboxImg" src="" alt="Full Photo" onclick="event.stopPropagation()">
+<div id="lightboxHint">Tap anywhere to close ✕</div>
+</div>
 
 <script>
 const _a = "9172";
@@ -101,6 +114,16 @@ function sendFeedback(){
   document.getElementById("fname").value="";
   document.getElementById("fmsg").value="";
   alert("Thank you! Your feedback is posted and sent to Shammmi 💌");
+}
+// FULL SCREEN FUNCTIONS
+function openFull(src){
+  document.getElementById("lightboxImg").src = src;
+  document.getElementById("lightbox").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeFull(){
+  document.getElementById("lightbox").classList.remove("open");
+  document.body.style.overflow = "";
 }
 </script>
 </body>
